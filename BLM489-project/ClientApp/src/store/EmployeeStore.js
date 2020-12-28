@@ -16,7 +16,7 @@ export const actionCreators = {
     requestEmployees: () => async (dispatch, getState) => {
         dispatch({ type: requestEmployeesType });
 
-        const url = `api/Employee/GetEmployees`;
+        const url = `api/Employee`;
         const response = await fetch(url);
         const allEmployee = await response.json(url);
         dispatch({ type: receiveEmployeesType, allEmployee });
@@ -36,7 +36,7 @@ export const actionCreators = {
         const baseURL = "./api/Employee";
 
         const data = JSON.stringify(
-            { id: employee.id, name: employee.name, power: employee.power, phone: employee.phone }
+            {  name: employee.name, power: employee.power, phone: employee.phone }
         );
 
         const fetchTask = fetch(baseURL, {

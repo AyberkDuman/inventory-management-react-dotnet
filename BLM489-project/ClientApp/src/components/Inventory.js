@@ -7,7 +7,7 @@ import { actionCreators } from '../store/InventoryStore';
 class Inventory extends Component {
 
     state = {
-        id: "",
+        chassis: "",
         model: "",
         year: "",
         fuel: "",
@@ -20,7 +20,7 @@ class Inventory extends Component {
     }
 
     addInventory() {
-        const inventory = { id: this.state.id, model: this.state.model, year: this.state.year, fuel: this.state.fuel, price: this.state.price};
+        const inventory = { chassis: this.state.chassis, model: this.state.model, year: this.state.year, fuel: this.state.fuel, price: this.state.price};
         this.props.addInventory(inventory);
         setTimeout(this.props.requestInventories, 600);
     }
@@ -44,15 +44,15 @@ class Inventory extends Component {
             let target = event.target,
                 update = {};
 
-            update.id = this.state.editing;
-            update[target.id] = target.value;
+            update.chassis = this.state.editing;
+            update[target.chassis] = target.value;
         }
     }
 
     handleEditItem() {
         let itemId = this.state.editing;
 
-        var editInventory = this.props.inventories.find((v) => v.id === itemId);
+        var editInventory = this.props.inventories.find((v) => v.chassis === itemId);
 
         editInventory.model = this.refs[`model_${itemId}`].value;
         editInventory.year = this.refs[`year_${itemId}`].value;
@@ -66,22 +66,23 @@ class Inventory extends Component {
     handleDeleteItem() {
         let itemId = this.state.editing;
 
-        var deleteInventory = this.props.inventories.find((v) => v.id === itemId);
+        var deleteInventory = this.props.inventories.find((v) => v.chassis === itemId);
 
         this.handleInventoryDelete(deleteInventory);
         this.setState({ editing: "" });
     }
 
     renderItemOrEditField(inventory) {
-        if (this.state.editing === inventory.id) {
+        if (this.state.editing === inventory.chassis) {
             return (
                 <tr key={inventory.id}>
                     <td>{inventory.id}</td>
+                    <td>{inventory.chassis}</td>
                     <td>
                         <input
                             onKeyDown={this.handleEditField}
                             type="text"
-                            ref={`model_${inventory.id}`}
+                            ref={`model_${inventory.chassis}`}
                             name="model"
                             defaultValue={inventory.model}
                         />
@@ -90,7 +91,7 @@ class Inventory extends Component {
                         <input
                             onKeyDown={this.handleEditField}
                             type="text"
-                            ref={`year_${inventory.id}`}
+                            ref={`year_${inventory.chassis}`}
                             name="year"
                             defaultValue={inventory.year}
                         />
@@ -100,7 +101,7 @@ class Inventory extends Component {
                         <input
                             onKeyDown={this.handleEditField}
                             type="text"
-                            ref={`fuel_${inventory.id}`}
+                            ref={`fuel_${inventory.chassis}`}
                             name="fuel"
                             defaultValue={inventory.fuel}
                         />
@@ -109,7 +110,7 @@ class Inventory extends Component {
                         <input
                             onKeyDown={this.handleEditField}
                             type="text"
-                            ref={`price_${inventory.id}`}
+                            ref={`price_${inventory.chassis}`}
                             name="price"
                             defaultValue={inventory.price}
                         />
@@ -124,9 +125,10 @@ class Inventory extends Component {
         } else {
             return (
                 <tr key={inventory.id}
-                    onClick={this.toggleEditing.bind(this, inventory.id)}
+                    onClick={this.toggleEditing.bind(this, inventory.chassis)}
                 >
                     <td>{inventory.id}</td>
+                    <td>{inventory.chassis}</td>
                     <td>{inventory.model}</td>
                     <td>{inventory.year}</td>
                     <td>{inventory.fuel}</td>
@@ -143,6 +145,7 @@ class Inventory extends Component {
                 <thead>
                     <tr>
                         <th>Item id</th>
+                        <th>Chassis Number</th>
                         <th>Model</th>
                         <th>Model Year</th>
                         <th>Fuel Type</th>
@@ -171,9 +174,10 @@ class Inventory extends Component {
 
                     <div className="card-body ">
                         <form>
+
                             <div className="form-group">
-                                <label htmlFor="id">ID</label>
-                                <input type="number" id="inventoryId" placeholder="Enter Item Id" class="form-control" value={this.state.id} onChange={(ev) => this.setState({ id: ev.target.value })} />
+                                <label htmlFor="Chassis">Chassis Number</label>
+                                <input type="text" id="inventoryChassis" placeholder="Enter Chassis Number" class="form-control" value={this.state.chassis} onChange={(ev) => this.setState({ chassis: ev.target.value })} />
                             </div>
 
                             <div className="btn-group btn-group-toggle" data-toggle="buttons" onChange={(ev) => this.setState({ model: ev.target.value })}>

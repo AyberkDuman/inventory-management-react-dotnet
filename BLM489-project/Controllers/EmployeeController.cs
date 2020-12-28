@@ -3,30 +3,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLM489_project.Models;
 
 namespace BLM489_project.Controllers
 {
     [Route("api/[controller]")]
     public class EmployeeController : Controller
     {
-        private static List<Employee> Employees = new List<Employee>()
-        {
-            new Employee() {Id= "1", Name= "J.R.R.Tolkien", Power= "Admin", Phone= "101543"},
-            new Employee() {Id= "2", Name= "Mark Twain", Power= "Buyer", Phone= "202432"},
-            new Employee() {Id= "3", Name= "Ursula LeGuin", Power= "Seller", Phone= "303987"}
+        private readonly EmployeesContext _context;
 
-        };
+        public EmployeeController (EmployeesContext context)
+        {
+            _context = context;
+
+            if(_context.Employees.Count() == 0)
+            {
+                _context.Employees.Add(new Employee() { Name = "J.R.R.Tolkien", Power = "Admin", Phone = "101543" });
+                _context.Employees.Add(new Employee() { Name = "Mark Twain", Power = "Buyer", Phone = "202432" });
+                _context.Employees.Add(new Employee() { Name = "Ursula LeGuin", Power = "Seller", Phone = "303987" });
+                _context.SaveChanges();
+            }
+        }
+
         
-        [HttpGet("[action]")]
+        [HttpGet]
         public List<Employee> GetEmployees ()
         {
-            return Employees;
+            return _context.Employees.ToList();
         }
 
         [HttpGet("[action]/{id}")]
-        public Employee GetEmployee(string id)
+        public Employee GetEmployee(long id)
         {
-            var employee = Employees.Find((v) => v.Id.ToLower() == id.ToLower());
+            var employee = _context.Employees.Find(id);
 
             if (employee == null)
             {
@@ -41,7 +50,8 @@ namespace BLM489_project.Controllers
         [HttpPost]
         public IActionResult AddEmployee([FromBody] Employee item)
         {
-            Employees.Add(item);                       
+            _context.Employees.Add(item);
+            _context.SaveChanges();
 
             return Ok(new
             {
@@ -51,11 +61,11 @@ namespace BLM489_project.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update ([FromBody] Employee employee)
+        public IActionResult Update([FromBody] Employee employee)
         {
-            var employeeToUpdate = Employees.Find((v) => v.Id == employee.Id);
+            var employeeToUpdate = _context.Employees.Find(employee.Id);
 
-            if(employeeToUpdate == null)
+            if (employeeToUpdate == null)
             {
                 return NotFound();
             }
@@ -63,6 +73,9 @@ namespace BLM489_project.Controllers
             employeeToUpdate.Name = employee.Name;
             employeeToUpdate.Power = employee.Power;
             employeeToUpdate.Phone = employee.Phone;
+
+            _context.Employees.Update(employeeToUpdate);
+            _context.SaveChanges();
 
             return Ok(new
             {
@@ -72,16 +85,17 @@ namespace BLM489_project.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(long id)
         {
-            var employeeToDelete = Employees.Find((v) => v.Id == id);
+            var employeeToDelete = _context.Employees.Find(id);
 
             if (employeeToDelete == null)
             {
                 return NotFound();
             }
 
-            Employees.Remove(employeeToDelete);
+            _context.Employees.Remove(employeeToDelete);
+            _context.SaveChanges();
 
             return Ok(new
             {
@@ -90,13 +104,5 @@ namespace BLM489_project.Controllers
             });
         }
 
-
-        public class Employee
-        {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string Power { get; set; }
-            public string Phone { get; set; }
-        }   
     }
 }

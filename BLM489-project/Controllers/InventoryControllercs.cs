@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using BLM489_project.Models;
 
 namespace BLM489_project.Controllers
 {
@@ -10,24 +11,31 @@ namespace BLM489_project.Controllers
 
     public class InventoryController : Controller
     {
-        private static List<Inventory> Inventories = new List<Inventory>()
+        private readonly InventoriesContenx _context;
+
+        public InventoryController(InventoriesContenx context)
+        {
+            _context = context;
+
+            if (_context.Inventories.Count() == 0)
             {
-                new Inventory() {Id= "000123", Model= "Mustang", Year= "2020", Fuel= "Gas", Price= "3.000.000"},
-                new Inventory() {Id= "000234", Model= "Fiesta", Year= "2019", Fuel= "Gas", Price= "203.400"},
-                new Inventory() {Id= "000456", Model= "Focus", Year= "2020", Fuel= "Diesel", Price= "300.700"}
+                _context.Inventories.Add(new Inventory() { Chassis = "LP244S22RDEA", Model = "Mustang", Year = "2020", Fuel = "Gas", Price = "3.000.000" });
+                _context.Inventories.Add(new Inventory() { Chassis = "4P97JFF9S99T", Model = "Fiesta", Year = "2019", Fuel = "Gas", Price = "203.400" });
+                _context.Inventories.Add(new Inventory() { Chassis = "J74002R39XC1", Model = "Focus", Year = "2020", Fuel = "Diesel", Price = "300.700" });
+                _context.SaveChanges();
+            }
+        }
 
-            };
-
-        [HttpGet("[action]")]
+        [HttpGet]
         public List<Inventory> GetInventories()
         {
-            return Inventories;
+            return _context.Inventories.ToList();
         }
 
         [HttpGet("[action]/{id}")]
-        public Inventory GetInventories(string id)
+        public Inventory GetInventories(long id)
         {
-            var inventory = Inventories.Find((v) => v.Id.ToLower() == id.ToLower());
+            var inventory = _context.Inventories.Find(id);
 
             if (inventory == null)
             {
@@ -42,7 +50,8 @@ namespace BLM489_project.Controllers
         [HttpPost]
         public IActionResult AddInventory([FromBody] Inventory item)
         {
-            Inventories.Add(item);
+            _context.Inventories.Add(item);
+            _context.SaveChanges();
 
             return Ok(new
             {
@@ -54,17 +63,21 @@ namespace BLM489_project.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] Inventory inventory)
         {
-            var inventoryToUpdate = Inventories.Find((v) => v.Id == inventory.Id);
+            var inventoryToUpdate = _context.Inventories.Find(inventory.Id);
 
             if (inventoryToUpdate == null)
             {
                 return NotFound();
             }
 
+            inventoryToUpdate.Chassis = inventory.Chassis;
             inventoryToUpdate.Model = inventory.Model;
             inventoryToUpdate.Year = inventory.Year;
             inventoryToUpdate.Fuel = inventory.Fuel;
             inventoryToUpdate.Price = inventory.Price;
+
+            _context.Inventories.Update(inventoryToUpdate);
+            _context.SaveChanges();
 
             return Ok(new
             {
@@ -74,16 +87,17 @@ namespace BLM489_project.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(long id)
         {
-            var inventoryToDelete = Inventories.Find((v) => v.Id == id);
+            var inventoryToDelete = _context.Inventories.Find(id);
 
             if (inventoryToDelete == null)
             {
                 return NotFound();
             }
 
-            Inventories.Remove(inventoryToDelete);
+            _context.Inventories.Remove(inventoryToDelete);
+            _context.SaveChanges();
 
             return Ok(new
             {
@@ -91,17 +105,6 @@ namespace BLM489_project.Controllers
                 returncode = "200"
             });
         }
-
-        public class Inventory
-        {
-            public string Id { get; set; }
-            public string Model { get; set; }
-            public string Year { get; set; }
-            public string Fuel { get; set; }
-            public string Price { get; set; }
-        }
-
-
 
     }
 }

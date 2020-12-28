@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 class Employee extends Component {
 
     state = {
-        id: "",
         name: "",
         power: "",
         phone: "",
@@ -19,7 +18,7 @@ class Employee extends Component {
     }
 
     addEmployee() {
-        const employee = { id: this.state.id, name: this.state.name, power: this.state.power, phone: this.state.phone };
+        const employee = {  name: this.state.name, power: this.state.power, phone: this.state.phone };
         this.props.addEmployee(employee);
         setTimeout(this.props.requestEmployees, 600);
     }
@@ -43,17 +42,16 @@ class Employee extends Component {
             let target = event.target,
                 update = {};
 
-            update.id = this.state.editing;
-            update[target.id] = target.value;
+            update.name = this.state.editing;
+            update[target.name] = target.value;
         }
     }
 
     handleEditItem() {
         let itemId = this.state.editing;
 
-        var editEmployee = this.props.employees.find((v) => v.id === itemId);
+        var editEmployee = this.props.employees.find((v) => v.name === itemId);
 
-        editEmployee.name = this.refs[`name_${itemId}`].value;
         editEmployee.power = this.refs[`power_${itemId}`].value;
         editEmployee.phone = this.refs[`phone_${itemId}`].value;
 
@@ -64,31 +62,24 @@ class Employee extends Component {
     handleDeleteItem() {
         let itemId = this.state.editing;
 
-        var deleteEmployee = this.props.employees.find((v) => v.id === itemId);
+        var deleteEmployee = this.props.employees.find((v) => v.name === itemId);
 
         this.handleEmployeeDelete(deleteEmployee);
         this.setState({ editing: "" });
     }
 
     renderItemOrEditField(employee) {
-        if (this.state.editing === employee.id) {
+        if (this.state.editing === employee.name) {
             return (
                 <tr key={employee.id}>
                     <td>{employee.id}</td>
+                    <td>{employee.name}</td>
+                    
                     <td>
                         <input
                             onKeyDown={this.handleEditField}
                             type="text"
-                            ref={`name_${employee.id}`}
-                            name="name"
-                            defaultValue={employee.name}
-                        />
-                    </td>
-                    <td>
-                        <input
-                            onKeyDown={this.handleEditField}
-                            type="text"
-                            ref={`power_${employee.id}`}
+                            ref={`power_${employee.name}`}
                             name="power"
                             defaultValue={employee.power}
                         />
@@ -98,7 +89,7 @@ class Employee extends Component {
                         <input 
                             onKeyDown={this.handleEditField}
                             type="text"
-                            ref={`phone_${employee.id}`}
+                            ref={`phone_${employee.name}`}
                             name="phone"
                             defaultValue={employee.phone}
                         />
@@ -113,7 +104,7 @@ class Employee extends Component {
         } else {
             return (
                 <tr key={employee.id}
-                    onClick={this.toggleEditing.bind(this, employee.id)}
+                    onClick={this.toggleEditing.bind(this, employee.name)}
                 >
                     <td>{employee.id}</td>
                     <td>{employee.name}</td>
@@ -157,11 +148,7 @@ class Employee extends Component {
 
                     <div className="card-body ">
                         <form>
-                            <div className="form-group">
-                                <label htmlFor="id">Employee Number</label>
-                                <input type="number" id="employeeId" placeholder="Enter Employee Number" class="form-control" value={this.state.id} onChange={(ev) => this.setState({ id: ev.target.value })} />
-                            </div>
-
+                           
                             <div className="form-group">
                                 <label htmlFor="name">Name</label>
                                 <input type="text" id="employeeName" placeholder="Enter Name" class="form-control" value={this.state.name} onChange={(ev) => this.setState({ name: ev.target.value })} />

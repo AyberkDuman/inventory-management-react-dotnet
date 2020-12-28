@@ -15,7 +15,7 @@ export const actionCreators = {
     requestInventories: () => async (dispatch, getState) => {
         dispatch({ type: requestInventoriesType });
 
-        const url = `api/Inventory/GetInventories`;
+        const url = `api/Inventory`;
         const response = await fetch(url);
         const allInventory = await response.json(url);
         dispatch({ type: receiveInventoriesType, allInventory });
@@ -35,7 +35,7 @@ export const actionCreators = {
         const baseURL = "./api/Inventory";
 
         const data = JSON.stringify(
-            { id: inventory.id, model: inventory.model, year: inventory.year, fuel: inventory.fuel, price: inventory.price }
+            { chassis: inventory.chassis, model: inventory.model, year: inventory.year, fuel: inventory.fuel, price: inventory.price }
         );
 
         const fetchTask = fetch(baseURL, {
@@ -55,7 +55,7 @@ export const actionCreators = {
         const baseURL = "/api/Inventory";
 
         const data = JSON.stringify(
-            { id: inventory.id, model: inventory.model, year: inventory.year, fuel: inventory.fuel, price: inventory.price }
+            { id: inventory.id, chassis: inventory.chassis, model: inventory.model, year: inventory.year, fuel: inventory.fuel, price: inventory.price }
         );
 
         const fetchTask = fetch(baseURL, {
