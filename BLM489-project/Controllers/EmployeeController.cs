@@ -18,9 +18,9 @@ namespace BLM489_project.Controllers
 
             if(_context.Employees.Count() == 0)
             {
-                _context.Employees.Add(new Employee() { Name = "J.R.R.Tolkien", Power = "Admin", Phone = "101543" });
-                _context.Employees.Add(new Employee() { Name = "Mark Twain", Power = "Buyer", Phone = "202432" });
-                _context.Employees.Add(new Employee() { Name = "Ursula LeGuin", Power = "Seller", Phone = "303987" });
+                _context.Employees.Add(new Employee() { Name = "J.R.R.Tolkien", Power = "Admin", Password = "11111" });
+                _context.Employees.Add(new Employee() { Name = "Mark Twain", Power = "Buyer", Password = "22222" });
+                _context.Employees.Add(new Employee() { Name = "Ursula Le Guin", Power = "Seller", Password = "33333" });
                 _context.SaveChanges();
             }
         }
@@ -72,7 +72,7 @@ namespace BLM489_project.Controllers
 
             employeeToUpdate.Name = employee.Name;
             employeeToUpdate.Power = employee.Power;
-            employeeToUpdate.Phone = employee.Phone;
+            employeeToUpdate.Password = employee.Password;
 
             _context.Employees.Update(employeeToUpdate);
             _context.SaveChanges();

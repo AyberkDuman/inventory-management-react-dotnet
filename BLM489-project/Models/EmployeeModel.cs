@@ -10,6 +10,6 @@ namespace BLM489_project.Models
         public long Id { get; set; }
         public string Name { get; set; }
         public string Power { get; set; }
-        public string Phone { get; set; }
+        public string Password { get; set; }
     }
 }

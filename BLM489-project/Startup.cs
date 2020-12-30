@@ -25,13 +25,15 @@ namespace BLM489_project
         {
             services.AddDbContext<EmployeesContext>(opt => opt.UseInMemoryDatabase("EmployeeList"));
             services.AddDbContext<InventoriesContenx>(opt => opt.UseInMemoryDatabase("InventoryList"));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,9 +49,12 @@ namespace BLM489_project
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
 
             app.UseMvc(routes =>
             {

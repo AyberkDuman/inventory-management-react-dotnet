@@ -17,7 +17,7 @@ export default props => (
                 <li class="nav-item">
                     <LinkContainer to={'/'} exact>
                         <NavItem>
-                            Home
+                            Login
                         </NavItem>
                     </LinkContainer>
                 </li>

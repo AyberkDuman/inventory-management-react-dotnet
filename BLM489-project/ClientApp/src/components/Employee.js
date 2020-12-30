@@ -9,7 +9,7 @@ class Employee extends Component {
     state = {
         name: "",
         power: "",
-        phone: "",
+        password: "",
         editing: ""
     };
 
@@ -18,7 +18,7 @@ class Employee extends Component {
     }
 
     addEmployee() {
-        const employee = {  name: this.state.name, power: this.state.power, phone: this.state.phone };
+        const employee = { name: this.state.name, power: this.state.power, password: this.state.password };
         this.props.addEmployee(employee);
         setTimeout(this.props.requestEmployees, 600);
     }
@@ -53,7 +53,7 @@ class Employee extends Component {
         var editEmployee = this.props.employees.find((v) => v.name === itemId);
 
         editEmployee.power = this.refs[`power_${itemId}`].value;
-        editEmployee.phone = this.refs[`phone_${itemId}`].value;
+        editEmployee.password = this.refs[`password_${itemId}`].value;
 
         this.handleEmployeeUpdate(editEmployee);
         this.setState({ editing: "" });
@@ -89,9 +89,9 @@ class Employee extends Component {
                         <input 
                             onKeyDown={this.handleEditField}
                             type="text"
-                            ref={`phone_${employee.name}`}
-                            name="phone"
-                            defaultValue={employee.phone}
+                            ref={`password_${employee.name}`}
+                            name="password"
+                            defaultValue={employee.password}
                         />
                     </td>
                     <td>
@@ -109,7 +109,7 @@ class Employee extends Component {
                     <td>{employee.id}</td>
                     <td>{employee.name}</td>
                     <td>{employee.power}</td>
-                    <td>{employee.phone}</td>
+                    <td>{employee.password}</td>
                     <td></td>
                     <td></td>
                 </tr>);
@@ -124,7 +124,7 @@ class Employee extends Component {
                         <th>Employee Number</th>
                         <th>Name</th>
                         <th>Power</th>
-                        <th>Phone</th>
+                        <th>Password</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -167,8 +167,8 @@ class Employee extends Component {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="phone">Phone</label>
-                                <input type="number" id="employeePhone" placeholder="Enter Phone" class="form-control" value={this.state.phone} onChange={(ev) => this.setState({ phone: ev.target.value })} />
+                                <label htmlFor="password">Password</label>
+                                <input type="text" id="employeePassword" placeholder="Enter Password" class="form-control" value={this.state.password} onChange={(ev) => this.setState({ password: ev.target.value })} />
                             </div>
 
                             <button class="btn btn-primary btn-block " type="button" onClick={this.addEmployee.bind(this)}>Add New Employee</button>

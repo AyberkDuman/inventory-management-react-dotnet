@@ -5,7 +5,9 @@ const receiveEmployeeType = 'RECEIVE_EMPLOYEE';
 const addEmployeeType = 'ADD_EMPLOYEE';
 const updateEmployeeType = 'UPDATE_EMPLOYEE';
 const deleteEmployeeType = 'DELETE_EMPLOYEE';
-const initialState = { employees: [], employee: {}, isLoading: false };
+const requestLoginType = 'REQUEST_LOGIN';
+const receiveLoginType = 'RECEIVE_LOGIN';
+const initialState = { employees: [], employee: {}, isLoading: false, signedin: false };
 
 let allEmployee = [];
 let currentEmployee = {};
@@ -36,7 +38,7 @@ export const actionCreators = {
         const baseURL = "./api/Employee";
 
         const data = JSON.stringify(
-            {  name: employee.name, power: employee.power, phone: employee.phone }
+            { name: employee.name, power: employee.power, password: employee.password }
         );
 
         const fetchTask = fetch(baseURL, {
@@ -57,7 +59,7 @@ export const actionCreators = {
         const baseURL = "/api/Employee";
 
         const data = JSON.stringify(
-            { id: employee.id, name: employee.name, power: employee.power, phone: employee.phone }
+            { id: employee.id, name: employee.name, power: employee.power, password: employee.password }
         );
 
         const fetchTask = fetch(baseURL, {
@@ -86,7 +88,20 @@ export const actionCreators = {
             .then((data) => {
                 dispatch({ type: deleteEmployeeType });
             });
+    },
+
+    /*
+    login: (id, password) => async (dispatch, getState) => {
+        dispatch({ type: requestSigninType });
+
+        const url = `api/Employee/GetEmployee/${id}`;
+        const response = await fetch(url);
+        const employee = await response.json();
+
+        dispatch({ type: receiveSigninType, employee });
+
     }
+    */
 };
 
 export const reducer = (state, action) => {
@@ -148,6 +163,18 @@ export const reducer = (state, action) => {
             isLoading: false
         };
     }
+
+    /*
+    if (action.type === receiveSigninType) {
+       //login
+        
+        return {
+            ...state,
+            signedin: true,
+            isLoading: false
+        };
+    }
+    */
 
     return state;
 };
